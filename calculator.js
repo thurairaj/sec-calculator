@@ -15,13 +15,13 @@ class Calculator {
   appendNumber(num) {
     if (this.operation === "") {
       this.appendLeft(num)
-    } else if(this.operation === "=") {
+    } else if (this.operation === "=") {
       this.reset();
       this.appendLeft(num)
     } else {
       this.appendRight(num)
     }
-      
+
   }
 
   appendLeft(left) {
@@ -45,25 +45,41 @@ class Calculator {
   }
 
   output() {
-    if (this.operation === "" || this.operation === "=")
+    if (this.operation === "" ||
+      this.operation === "=" ||
+      this.currentRight === "") {
       return parseInt(this.currentLeft).toString();
-    else 
+    } else {
       return parseInt(this.currentRight).toString();
+    }
+
   }
+
+  isReadyForEvaluation() {
+    return this.currentLeft !== "" &&
+      this.currentRight !== "" &&
+      this.operation !== "";
+  }
+
+  addition() {
+    return parseInt(this.currentLeft) + parseInt(this.currentRight)
+  }
+
 
   evaluate() {
     let result = 0;
-    // do something
-    // if this.operation equals 'x' --> result = left * right
-    
 
-    
+    if (this.isReadyForEvaluation()) {
+      if (this.operation === "+") {
+        result = this.addition();
+      }
 
-    if (this.operation !== "=")
-      this.operation = "";
+      if (this.operation !== "=")
+        this.operation = "";
 
-    this.currentLeft = result.toString();
-    this.currentRight = "";
+      this.currentLeft = result.toString();
+      this.currentRight = "";
+    }
 
     return;
   }
@@ -82,7 +98,7 @@ window.onload = (event) => {
   const inputTxt = document.getElementById('displayOutput');
 
   const updateDisplay = (txt) => {
-      inputTxt.value = txt;
+    inputTxt.value = txt;
   }
 
 
@@ -96,11 +112,9 @@ window.onload = (event) => {
 
   const operationHandler = (event) => {
     const value = event.target.innerHTML;
+    calculator.evaluate();
     calculator.setOperation(value);
-
-    // Do something
-    // 1. IF left has value , right has a value (evaluate)
-    // Clear right
+    updateDisplay(calculator.output());
     calculator.debug();
   };
 
